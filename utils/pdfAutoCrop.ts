@@ -9,13 +9,15 @@ if (typeof window !== 'undefined') {
   }
 }
 
-const CROP_SIZE = 430; // 430x430 pixels
+const DISPLAY_SIZE = 430; // Display size in pixels
+const RESOLUTION_MULTIPLIER = 2; // 2x for high-quality printing
+const ACTUAL_SIZE = DISPLAY_SIZE * RESOLUTION_MULTIPLIER; // 860x860 pixels
 
 /**
  * Automatically crops a PDF file from top-left corner
  * @param pdfFile - The PDF file to crop
  * @param pageNumber - Page number to crop (default: 1)
- * @returns Promise<string> - Data URL of the cropped image
+ * @returns Promise<string> - Data URL of the cropped image at 2x resolution (860x860)
  */
 export async function autoCropPdf(
   pdfFile: File,
@@ -64,10 +66,10 @@ export async function autoCropPdf(
 
     await page.render(renderContext).promise;
 
-    // Create a new canvas for the cropped image
+    // Create a new canvas for the cropped image at 2x resolution (860x860)
     const croppedCanvas = document.createElement('canvas');
-    croppedCanvas.width = CROP_SIZE;
-    croppedCanvas.height = CROP_SIZE;
+    croppedCanvas.width = ACTUAL_SIZE;  // 860 pixels
+    croppedCanvas.height = ACTUAL_SIZE; // 860 pixels
     const croppedContext = croppedCanvas.getContext('2d');
 
     if (!croppedContext) {
@@ -75,21 +77,15 @@ export async function autoCropPdf(
     }
 
     // Crop from top-left corner (0, 0)
-    // The canvas is rendered at scale 2.0, so we need to crop a square region
-    // that represents 430x430 pixels at the original scale
-    // Since we're using scale 2.0, the actual crop size on canvas is 430 * 2 = 860
+    // The canvas is rendered at scale 2.0, so we crop 860x860 pixels directly
     const sourceX = 0;
     const sourceY = 0;
     
-    // Calculate the crop size on the rendered canvas (accounting for scale)
-    // We want 430px at original size, but canvas is at 2x scale
-    const cropSizeOnCanvas = CROP_SIZE * 2; // 860 pixels
-    
     // Use the smaller dimension to ensure we don't go out of bounds
     const maxCropSize = Math.min(viewport.width, viewport.height);
-    const actualCropSize = Math.min(cropSizeOnCanvas, maxCropSize);
+    const actualCropSize = Math.min(ACTUAL_SIZE, maxCropSize);
     
-    // Draw the cropped portion to the new canvas with high quality scaling
+    // Draw the cropped portion to the new canvas - no downscaling, keeping full 860x860 resolution
     croppedContext.imageSmoothingEnabled = true;
     croppedContext.imageSmoothingQuality = 'high';
     
@@ -97,16 +93,16 @@ export async function autoCropPdf(
       canvas,
       sourceX,           // Source x (top-left)
       sourceY,           // Source y (top-left)
-      actualCropSize,    // Source width (on scaled canvas)
-      actualCropSize,    // Source height (on scaled canvas)
+      actualCropSize,    // Source width (860px from scaled canvas)
+      actualCropSize,    // Source height (860px from scaled canvas)
       0,                 // Destination x
       0,                 // Destination y
-      CROP_SIZE,         // Destination width (430px)
-      CROP_SIZE          // Destination height (430px)
+      ACTUAL_SIZE,       // Destination width (860px - keep full resolution)
+      ACTUAL_SIZE        // Destination height (860px - keep full resolution)
     );
 
-    // Convert to data URL
-    const croppedDataUrl = croppedCanvas.toDataURL('image/png');
+    // Convert to data URL with high quality
+    const croppedDataUrl = croppedCanvas.toDataURL('image/png', 1.0);
     
     // Clean up
     canvas.width = 0;

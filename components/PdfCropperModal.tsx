@@ -43,8 +43,10 @@ export default function PdfCropperModal({
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   
-  // Default crop size: 430x430 pixels
-  const CROP_SIZE = 430;
+  // Display size and actual resolution for high-quality printing
+  const DISPLAY_SIZE = 430;
+  const RESOLUTION_MULTIPLIER = 2;
+  const ACTUAL_SIZE = DISPLAY_SIZE * RESOLUTION_MULTIPLIER; // 860x860 pixels
 
   useEffect(() => {
     // Ensure worker is configured before loading PDF
@@ -242,7 +244,7 @@ export default function PdfCropperModal({
     if (!imgRef.current || cropperRef.current) return;
 
     cropperRef.current = new Cropper(imgRef.current, {
-      aspectRatio: 1, // Square aspect ratio (1:1) for 430x430
+      aspectRatio: 1, // Square aspect ratio (1:1) - will be exported at 860x860 (2x resolution)
       viewMode: 1,
       dragMode: 'move',
       autoCropArea: 0.8,
@@ -255,11 +257,11 @@ export default function PdfCropperModal({
       responsive: true,
       ready() {
         setIsLoading(false);
-        // Set initial crop box size to 430x430 and position at top-left
+        // Set initial crop box size to display size and position at top-left
         if (cropperRef.current) {
           const containerData = cropperRef.current.getContainerData();
           const minSize = Math.min(containerData.width, containerData.height) * 0.8;
-          const cropSize = Math.min(CROP_SIZE, minSize);
+          const cropSize = Math.min(DISPLAY_SIZE, minSize);
           
           // Position at top-left (small offset from edges)
           const offset = 0; // 10px offset from top-left corner
@@ -277,17 +279,17 @@ export default function PdfCropperModal({
   const handleCrop = () => {
     if (!cropperRef.current) return;
 
-    // Crop to 430x430 pixels (default size)
+    // Crop to 2x resolution (860x860 pixels) for high-quality printing
     const croppedCanvas = cropperRef.current.getCroppedCanvas({
-      width: CROP_SIZE, // 430x430 pixels
-      height: CROP_SIZE,
+      width: ACTUAL_SIZE, // 860x860 pixels (2x for high-quality print)
+      height: ACTUAL_SIZE,
       imageSmoothingEnabled: true,
       imageSmoothingQuality: 'high',
     });
 
     if (!croppedCanvas) return;
 
-    const croppedDataUrl = croppedCanvas.toDataURL('image/png');
+    const croppedDataUrl = croppedCanvas.toDataURL('image/png', 1.0);
     onCropped(pdfId, croppedDataUrl);
   };
 

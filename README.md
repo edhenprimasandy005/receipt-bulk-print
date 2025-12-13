@@ -94,8 +94,9 @@ This application is 100% client-side and does not require server API or environm
 ## 📄 Print Specifications
 
 - Paper size: A4 (210mm × 297mm)
-- Image size: 430×430px (1:1 ratio) - auto-fit
-- Print resolution: High quality
+- Image resolution: 860×860px (2x resolution for high-quality printing)
+- Display size: 430×430px (1:1 ratio) - auto-fit
+- Print quality: High-resolution (2x multiplier) for crisp, clear prints
 - Print media query for accurate size
 
 ## 🔧 Project Structure

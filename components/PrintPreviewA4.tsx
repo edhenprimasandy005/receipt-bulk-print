@@ -40,7 +40,7 @@ export default function PrintPreviewA4({
             Print Preview ({pages.length} {pages.length === 1 ? 'page' : 'pages'})
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Each image will be printed at 430×430px size (1:1 ratio)
+            Each image is 860×860px (2x resolution) for high-quality printing
           </p>
         </div>
       </div>
