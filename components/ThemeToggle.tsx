@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Sun, Moon } from 'phosphor-react';
+import { Button } from '@/components/ui/button';
 
 export default function ThemeToggle() {
   const [darkMode, setDarkMode] = useState(false);
@@ -33,16 +34,17 @@ export default function ThemeToggle() {
   };
 
   return (
-    <button
+    <Button
+      variant="ghost"
+      size="icon"
       onClick={toggleTheme}
-      className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
       aria-label="Toggle theme"
     >
       {darkMode ? (
-        <Sun className="w-6 h-6 text-yellow-500" weight="fill" />
+        <Sun className="h-5 w-5" weight="fill" />
       ) : (
-        <Moon className="w-6 h-6 text-gray-700" weight="fill" />
+        <Moon className="h-5 w-5" weight="fill" />
       )}
-    </button>
+    </Button>
   );
 }

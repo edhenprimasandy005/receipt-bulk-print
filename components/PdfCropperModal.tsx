@@ -131,14 +131,14 @@ export default function PdfCropperModal({
       
       // More helpful error message
       const errorMsg = error instanceof Error ? error.message : String(error);
-      let userMessage = 'Error loading PDF. Please try another file.';
+      let userMessage = 'Gagal memuat PDF. Silakan coba file lain.';
       
       if (errorMsg.includes('worker') || errorMsg.includes('fetch')) {
         const pdfjsVersion = pdfjsLib.version || '4.10.38';
-        userMessage = `Error loading PDF worker from CDN. Please check your internet connection and try again. (Version: ${pdfjsVersion})`;
+        userMessage = `Gagal memuat PDF worker dari CDN. Silakan periksa koneksi internet Anda dan coba lagi. (Versi: ${pdfjsVersion})`;
         setError(userMessage);
       } else if (errorMsg.includes('Invalid PDF')) {
-        userMessage = 'Invalid PDF file. Please select a valid PDF.';
+        userMessage = 'File PDF tidak valid. Silakan pilih PDF yang valid.';
         setError(userMessage);
       } else {
         setError(userMessage);
@@ -228,10 +228,10 @@ export default function PdfCropperModal({
       // Handle canvas errors specifically
       if (error?.message?.includes('canvas') || error?.message?.includes('render')) {
         console.error('Canvas render error:', error);
-        setError('Error rendering PDF page. Please try again or refresh the page.');
+        setError('Gagal merender halaman PDF. Silakan coba lagi atau refresh halaman.');
       } else {
         console.error('Error rendering page:', error);
-        setError('Error rendering PDF page. Please try again.');
+        setError('Gagal merender halaman PDF. Silakan coba lagi.');
       }
       
       setIsLoading(false);
@@ -301,7 +301,7 @@ export default function PdfCropperModal({
       onCropped(pdfId, croppedDataUrl);
     } catch (error) {
       console.error('Error auto-cropping PDF:', error);
-      setError('Error auto-cropping PDF. Please try manual cropping.');
+      setError('Gagal crop otomatis PDF. Silakan coba crop manual.');
       setIsLoading(false);
     }
   };
@@ -363,7 +363,7 @@ export default function PdfCropperModal({
               <div className="text-center">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Loading PDF...
+                  Memuat PDF...
                 </p>
               </div>
             </div>
@@ -379,7 +379,7 @@ export default function PdfCropperModal({
                 }}
                 className="mt-2 text-sm text-red-600 dark:text-red-400 hover:underline"
               >
-                Try again
+                Coba lagi
               </button>
             </div>
           )}
@@ -392,17 +392,17 @@ export default function PdfCropperModal({
                 disabled={currentPage === 1}
                 className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 dark:hover:bg-gray-600"
               >
-                Previous
+                Sebelumnya
               </button>
               <span className="text-gray-700 dark:text-gray-300">
-                Page {currentPage} of {totalPages}
+                Halaman {currentPage} dari {totalPages}
               </span>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
                 className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 dark:hover:bg-gray-600"
               >
-                Next
+                Selanjutnya
               </button>
             </div>
           )}
@@ -439,21 +439,21 @@ export default function PdfCropperModal({
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             <MagicWand className="w-5 h-5" weight="bold" />
-            Auto Crop
+            Crop Otomatis
           </button>
           <div className="flex items-center gap-4">
             <button
               onClick={onClose}
               className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded hover:bg-gray-300 dark:hover:bg-gray-600"
             >
-              Skip
+              Lewati
             </button>
             <button
               onClick={handleCrop}
               disabled={!cropperRef.current || isLoading || !!error}
               className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Crop & Use
+              Crop & Gunakan
             </button>
           </div>
         </div>

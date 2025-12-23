@@ -4,6 +4,7 @@ A Next.js web application for bulk printing receipts/invoices. Runs 100% client-
 
 ## ✨ Features
 
+### Receipt Bulk Print
 - ✅ Upload multiple files at once (JPG/PNG/PDF)
 - ✅ Drag & drop upload
 - ✅ A4 layout preview before printing
@@ -12,9 +13,18 @@ A Next.js web application for bulk printing receipts/invoices. Runs 100% client-
 - ✅ Auto-crop PDFs from top-left corner
 - ✅ Manual crop option for precise control
 - ✅ Print-ready with accurate physical size (A4)
+- ✅ 100% client-side processing (no API server)
+
+### Debt List Management
+- ✅ Full CRUD operations (Create, Read, Update, Delete)
+- ✅ Record payments with automatic status updates
+- ✅ Filter by name, status, date, and due date
+- ✅ Complete audit log for all debt operations
+- ✅ Track payment history
+- ✅ Automatic calculation of remaining amounts
+- ✅ Status management (pending, partial, paid, overdue)
 - ✅ Dark/Light mode toggle
 - ✅ Responsive design
-- ✅ 100% client-side processing (no API server)
 
 ## 🛠️ Tech Stack
 
@@ -27,6 +37,35 @@ A Next.js web application for bulk printing receipts/invoices. Runs 100% client-
 - **react-to-print** (Print functionality)
 
 ## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and pnpm (or npm)
+- Supabase account (for backend features)
+
+### Environment Setup
+
+1. **Copy environment variables:**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+2. **Get Supabase credentials:**
+   - Go to [Supabase Dashboard](https://app.supabase.com)
+   - Create a new project or select an existing one
+   - Go to Settings → API
+   - Copy your Project URL and anon/public key
+
+3. **Update `.env.local`:**
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Set up database tables:**
+   - Go to Supabase Dashboard → SQL Editor
+   - Run the SQL migration file: `supabase-migration.sql`
+   - This will create the `debts` and `debt_logs` tables with proper indexes and triggers
 
 ### Development
 
@@ -65,7 +104,76 @@ pnpm build
    - Import project in [Vercel Dashboard](https://vercel.com)
    - Automatic deployment
 
-This application is 100% client-side and does not require server API or environment variables.
+## 🔌 API Routes
+
+The application includes Next.js API routes for backend functionality:
+
+- `GET /api/health` - Health check endpoint to verify Supabase connection
+- `GET /api/example` - Example API route demonstrating Supabase usage
+- `POST /api/example` - Example POST endpoint
+
+### Using Supabase in API Routes
+
+```typescript
+import { supabase } from '@/lib/supabase/client';
+
+// Client-side usage
+const { data, error } = await supabase.from('table_name').select('*');
+
+// Server-side usage (in API routes)
+import { createServerClient } from '@/lib/supabase/server';
+const supabase = createServerClient();
+```
+
+## 📊 Debt List Management
+
+The Debt List feature provides comprehensive debt tracking with:
+
+### Features
+- **CRUD Operations**: Create, read, update, and delete debt records
+- **Payment Tracking**: Record payments with automatic status updates
+- **Filtering**: Filter by name, status, creation date, and due date
+- **Audit Logs**: Complete history of all debt operations
+- **Automatic Calculations**: Remaining amounts calculated automatically
+- **Status Management**: Automatic status updates (pending → partial → paid)
+
+### API Endpoints
+
+- `GET /api/debts` - List all debts (with optional filters)
+- `POST /api/debts` - Create new debt
+- `GET /api/debts/[id]` - Get single debt
+- `PUT /api/debts/[id]` - Update debt
+- `DELETE /api/debts/[id]` - Delete debt
+- `POST /api/debts/[id]/payment` - Record payment
+- `GET /api/debts/[id]/logs` - Get debt logs
+
+### Database Schema
+
+The application uses two main tables:
+
+**debts** - Main debt records
+- `id` (UUID)
+- `name` (VARCHAR)
+- `amount` (DECIMAL)
+- `paid_amount` (DECIMAL)
+- `remaining_amount` (DECIMAL)
+- `status` (pending/partial/paid/overdue)
+- `due_date` (TIMESTAMP)
+- `paid_date` (TIMESTAMP)
+- `created_at` (TIMESTAMP)
+- `updated_at` (TIMESTAMP)
+
+**debt_logs** - Audit trail
+- `id` (UUID)
+- `debt_id` (UUID, FK)
+- `action` (create/update/payment/delete)
+- `old_value` (JSONB)
+- `new_value` (JSONB)
+- `amount_paid` (DECIMAL)
+- `notes` (TEXT)
+- `created_at` (TIMESTAMP)
+
+Run the SQL migration file (`supabase-migration.sql`) in your Supabase SQL Editor to create these tables.
 
 ## 📝 How to Use
 
@@ -103,6 +211,16 @@ This application is 100% client-side and does not require server API or environm
 
 ```
 ├── app/
+│   ├── api/                # API routes (Next.js server routes)
+│   │   ├── health/         # Health check endpoint
+│   │   ├── example/        # Example API route
+│   │   └── debts/          # Debt CRUD API routes
+│   │       ├── [id]/       # Individual debt operations
+│   │       │   ├── payment/ # Payment recording
+│   │       │   └── logs/   # Debt logs
+│   │       └── route.ts   # List and create debts
+│   ├── debt-list/          # Debt list management page
+│   ├── receipt-bulk-print/ # Receipt bulk print page
 │   ├── layout.tsx          # Root layout
 │   ├── page.tsx            # Main page
 │   └── globals.css         # Global styles + print styles
@@ -114,7 +232,16 @@ This application is 100% client-side and does not require server API or environm
 │   ├── PdfCropperModal.tsx # PDF cropper modal
 │   ├── PdfCropChoiceModal.tsx # PDF crop choice modal
 │   ├── AutoCropProgressModal.tsx # Auto crop progress modal
+│   ├── DebtForm.tsx        # Debt create/edit form
+│   ├── DebtTable.tsx       # Debt list table with filters
+│   ├── PaymentDialog.tsx   # Payment recording dialog
+│   ├── DebtLogsDialog.tsx # Debt logs viewer
 │   └── ThemeToggle.tsx     # Dark/light mode toggle
+├── lib/
+│   ├── supabase/          # Supabase client configuration
+│   │   ├── client.ts      # Client-side Supabase client
+│   │   └── server.ts      # Server-side Supabase client
+│   └── utils.ts           # Utility functions
 ├── utils/
 │   └── pdfAutoCrop.ts      # PDF auto-crop utility
 └── types/
@@ -125,12 +252,17 @@ This application is 100% client-side and does not require server API or environm
 
 - `next` - Next.js framework
 - `react` & `react-dom` - React library
+- `@supabase/supabase-js` - Supabase client library
+- `react-hook-form` - Form management
+- `@hookform/resolvers` - Form validation resolvers
+- `zod` - Schema validation
+- `date-fns` - Date formatting
 - `pdfjs-dist` - PDF rendering
 - `cropperjs` - Image cropping
 - `react-cropper` - React wrapper for Cropper.js
 - `react-to-print` - Print functionality
 - `tailwindcss` - CSS framework
-- `phosphor-react` - Icons
+- `phosphor-react` & `lucide-react` - Icons
 
 ## ⚠️ Important Notes
 

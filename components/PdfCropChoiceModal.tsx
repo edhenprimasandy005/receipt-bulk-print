@@ -22,7 +22,7 @@ export default function PdfCropChoiceModal({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Crop PDF Files
+            Crop File PDF
           </h2>
           <button
             onClick={onClose}
@@ -34,7 +34,7 @@ export default function PdfCropChoiceModal({
 
         <div className="p-6">
           <p className="text-gray-700 dark:text-gray-300 mb-6">
-            You have {pdfFiles.length} PDF file{pdfFiles.length > 1 ? 's' : ''} to crop. How would you like to proceed?
+            Anda memiliki {pdfFiles.length} file PDF yang perlu di-crop. Bagaimana Anda ingin melanjutkan?
           </p>
 
           <div className="space-y-4">
@@ -44,9 +44,9 @@ export default function PdfCropChoiceModal({
             >
               <MagicWand className="w-6 h-6" weight="bold" />
               <div className="text-left flex-1">
-                <div className="font-semibold">Auto Crop All</div>
+                <div className="font-semibold">Crop Otomatis Semua</div>
                 <div className="text-sm text-green-100">
-                  Automatically crop all PDFs from top-left corner
+                  Otomatis crop semua PDF dari sudut kiri atas
                 </div>
               </div>
             </button>
@@ -57,9 +57,9 @@ export default function PdfCropChoiceModal({
             >
               <Hand className="w-6 h-6" weight="bold" />
               <div className="text-left flex-1">
-                <div className="font-semibold">Manual Crop (One by One)</div>
+                <div className="font-semibold">Crop Manual (Satu per Satu)</div>
                 <div className="text-sm text-blue-100">
-                  Review and crop each PDF manually
+                  Tinjau dan crop setiap PDF secara manual
                 </div>
               </div>
             </button>

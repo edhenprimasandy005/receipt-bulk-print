@@ -85,13 +85,13 @@ export default function FileUploader({ onFilesSelected }: FileUploaderProps) {
           weight="duotone"
         />
         <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {isDragging ? 'Drop files here' : 'Click or drag files here'}
+          {isDragging ? 'Lepaskan file di sini' : 'Klik atau seret file ke sini'}
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Format: JPG, PNG, PDF
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          You can upload multiple files at once
+          Anda dapat mengunggah beberapa file sekaligus
         </p>
       </label>
     </div>

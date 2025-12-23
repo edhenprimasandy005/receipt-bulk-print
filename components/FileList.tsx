@@ -13,7 +13,7 @@ export default function FileList({ images, onRemove }: FileListProps) {
     return (
       <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
         <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-          No files uploaded yet
+          Belum ada file yang diunggah
         </p>
       </div>
     );
@@ -22,7 +22,7 @@ export default function FileList({ images, onRemove }: FileListProps) {
   return (
     <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow max-h-64 overflow-y-auto">
       <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
-        File Uploaded ({images.length})
+        File Terunggah ({images.length})
       </h3>
       <div className="space-y-2">
         {images.map((image) => (
@@ -49,16 +49,16 @@ export default function FileList({ images, onRemove }: FileListProps) {
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">
                 {image.isPdf
-                  ? 'PDF - Waiting for crop'
+                  ? 'PDF - Menunggu crop'
                   : image.preview
-                  ? 'Ready'
-                  : 'Processing...'}
+                  ? 'Siap'
+                  : 'Memproses...'}
               </p>
             </div>
             <button
               onClick={() => onRemove(image.id)}
               className="flex-shrink-0 text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
-              title="Remove"
+              title="Hapus"
             >
               <Trash
                 className="w-5 h-5"

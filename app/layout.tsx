@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navigation from "@/components/Navigation";
+import { ToastProvider } from "@/components/ToastProvider";
 
 export const metadata: Metadata = {
-  title: "Receipt Bulk Print",
-  description: "Print receipts/invoices in bulk - 100% client-side",
+  title: "Widjaya Tools",
+  description: "Collection of useful tools for Widjaya",
   icons: {
     icon: [
       { url: '/favicon/favicon.ico', sizes: 'any' },
@@ -24,7 +26,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                const theme = localStorage.theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body>
+        <Navigation />
+        <main>{children}</main>
+        <ToastProvider />
+      </body>
     </html>
   );
 }

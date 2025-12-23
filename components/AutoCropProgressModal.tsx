@@ -39,7 +39,7 @@ export default function AutoCropProgressModal({
         } catch (err) {
           console.error(`Error auto-cropping PDF ${pdfFiles[i].file.name}:`, err);
           const errorMsg = err instanceof Error ? err.message : 'Unknown error';
-          setError(`Failed to crop "${pdfFiles[i].file.name}": ${errorMsg}`);
+          setError(`Gagal crop "${pdfFiles[i].file.name}": ${errorMsg}`);
           
           // Continue processing other files even if one fails
         }
@@ -69,7 +69,7 @@ export default function AutoCropProgressModal({
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Auto Cropping PDFs
+            Crop Otomatis PDF
           </h2>
           {!isProcessing && (
             <button
@@ -86,7 +86,7 @@ export default function AutoCropProgressModal({
             <>
               <div className="mb-4">
                 <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  <span>Processing...</span>
+                  <span>Memproses...</span>
                   <span>{currentIndex + 1} / {pdfFiles.length}</span>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
@@ -99,7 +99,7 @@ export default function AutoCropProgressModal({
 
               {currentFile && (
                 <div className="text-sm text-gray-700 dark:text-gray-300">
-                  <p className="font-medium">Current file:</p>
+                  <p className="font-medium">File saat ini:</p>
                   <p className="truncate">{currentFile.file.name}</p>
                 </div>
               )}
@@ -129,17 +129,17 @@ export default function AutoCropProgressModal({
                   </svg>
                 </div>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  Completed!
+                  Selesai!
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                  Successfully cropped {results.length} of {pdfFiles.length} PDF file{pdfFiles.length > 1 ? 's' : ''}
+                  Berhasil crop {results.length} dari {pdfFiles.length} file PDF
                 </p>
               </div>
               <button
                 onClick={onClose}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
-                Close
+                Tutup
               </button>
             </div>
           )}
